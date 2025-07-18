@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Clone - Social Media Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #15202b;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #1da1f2;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .tweet-composer {
+            background-color: #192734;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #38444d;
+        }
+
+        .tweet-composer textarea {
+            width: 100%;
+            height: 120px;
+            background-color: #253341;
+            color: white;
+            border: 1px solid #38444d;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .tweet-composer button {
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .tweet-composer button:hover {
+            background-color: #1a91da;
+        }
+
+        .timeline {
+            background-color: #192734;
+            border-radius: 15px;
+            border: 1px solid #38444d;
+        }
+
+        .tweet {
+            padding: 20px;
+            border-bottom: 1px solid #38444d;
+            transition: background-color 0.3s;
+        }
+
+        .tweet:hover {
+            background-color: #1c2732;
+        }
+
+        .tweet:last-child {
+            border-bottom: none;
+        }
+
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #1da1f2;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info h3 {
+            margin-bottom: 5px;
+            color: #1da1f2;
+        }
+
+        .user-info .username {
+            color: #8899a6;
+            font-size: 14px;
+        }
+
+        .tweet-content {
+            margin-left: 63px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .tweet-actions {
+            margin-left: 63px;
+            display: flex;
+            gap: 40px;
+        }
+
+        .tweet-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8899a6;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .tweet-action:hover {
+            color: #1da1f2;
+        }
+
+        .hashtag {
+            color: #1da1f2;
+            text-decoration: none;
+        }
+
+        .hashtag:hover {
+            text-decoration: underline;
+        }
+
+        .mention {
+            color: #1da1f2;
+            text-decoration: none;
+        }
+
+        .mention:hover {
+            text-decoration: underline;
+        }
+
+        .sidebar {
+            background-color: #192734;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #38444d;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h3 {
+            color: #1da1f2;
+            margin-bottom: 15px;
+        }
+
+        .trending-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #38444d;
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-hashtag {
+            color: #1da1f2;
+            font-weight: bold;
+        }
+
+        .trending-count {
+            color: #8899a6;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tweet-composer textarea {
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🐦 Twitter Clone</h1>
+    </div>
+
+    <div class="container">
+        <div class="tweet-composer">
+            <textarea placeholder="What's happening?" id="tweetContent"></textarea>
+            <button onclick="postTweet()">Tweet</button>
+        </div>
+
+        <div class="timeline" id="timeline">
+            <!-- Sample tweets will be loaded here -->
+        </div>
+
+        <div class="sidebar">
+            <h3>Trending Hashtags</h3>
+            <div class="trending-item">
+                <div class="trending-hashtag">#TwitterClone</div>
+                <div class="trending-count">1.2k Tweets</div>
+            </div>
+            <div class="trending-item">
+                <div class="trending-hashtag">#WebDevelopment</div>
+                <div class="trending-count">856 Tweets</div>
+            </div>
+            <div class="trending-item">
+                <div class="trending-hashtag">#JavaScript</div>
+                <div class="trending-count">642 Tweets</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample tweets data
+        const sampleTweets = [
+            {
+                id: 1,
+                username: "@johndoe",
+                displayName: "John Doe",
+                content: "Just finished building my Twitter clone! Excited to share it with the world 🚀 #TwitterClone #WebDev",
+                timestamp: "2h",
+                likes: 42,
+                retweets: 15,
+                replies: 8
+            },
+            {
+                id: 2,
+                username: "@jane_smith",
+                displayName: "Jane Smith",
+                content: "The power of social media platforms is incredible. Building a Twitter clone really helps you understand the architecture behind these apps. #SocialMedia #Tech",
+                timestamp: "4h",
+                likes: 28,
+                retweets: 7,
+                replies: 12
+            },
+            {
+                id: 3,
+                username: "@devguru",
+                displayName: "Dev Guru",
+                content: "Pro tip: When building a Twitter clone, focus on the user experience first. The timeline should be fast and responsive! #UX #TwitterClone",
+                timestamp: "6h",
+                likes: 67,
+                retweets: 23,
+                replies: 19
+            }
+        ];
+
+        function loadTweets() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+
+            sampleTweets.forEach(tweet => {
+                const tweetElement = createTweetElement(tweet);
+                timeline.appendChild(tweetElement);
+            });
+        }
+
+        function createTweetElement(tweet) {
+            const tweetDiv = document.createElement('div');
+            tweetDiv.className = 'tweet';
+            
+            const initials = tweet.displayName.split(' ').map(n => n[0]).join('');
+            
+            tweetDiv.innerHTML = `
+                <div class="tweet-header">
+                    <div class="user-avatar">${initials}</div>
+                    <div class="user-info">
+                        <h3>${tweet.displayName}</h3>
+                        <span class="username">${tweet.username} • ${tweet.timestamp}</span>
+                    </div>
+                </div>
+                <div class="tweet-content">
+                    ${formatTweetContent(tweet.content)}
+                </div>
+                <div class="tweet-actions">
+                    <div class="tweet-action">
+                        <span>💬</span>
+                        <span>${tweet.replies}</span>
+                    </div>
+                    <div class="tweet-action">
+                        <span>🔄</span>
+                        <span>${tweet.retweets}</span>
+                    </div>
+                    <div class="tweet-action">
+                        <span>❤️</span>
+                        <span>${tweet.likes}</span>
+                    </div>
+                </div>
+            `;
+            
+            return tweetDiv;
+        }
+
+        function formatTweetContent(content) {
+            // Format hashtags and mentions
+            return content
+                .replace(/#(\w+)/g, '<a href="#" class="hashtag">#$1</a>')
+                .replace(/@(\w+)/g, '<a href="#" class="mention">@$1</a>');
+        }
+
+        function postTweet() {
+            const content = document.getElementById('tweetContent').value.trim();
+            if (!content) return;
+
+            const newTweet = {
+                id: sampleTweets.length + 1,
+                username: "@you",
+                displayName: "You",
+                content: content,
+                timestamp: "now",
+                likes: 0,
+                retweets: 0,
+                replies: 0
+            };
+
+            sampleTweets.unshift(newTweet);
+            loadTweets();
+            document.getElementById('tweetContent').value = '';
+        }
+
+        // Load tweets when page loads
+        window.onload = loadTweets;
+    </script>
+</body>
+</html>

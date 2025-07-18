@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Twitter Clone{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Tweet Composer -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-feather-alt"></i> What's happening?</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('post_tweet') }}">
+                    <div class="mb-3">
+                        <textarea class="form-control" name="content" rows="3" placeholder="What's on your mind?" maxlength="280" required></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">280 characters max</small>
+                        <button type="submit" class="btn btn-primary">Tweet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-stream"></i> Timeline</h5>
+            </div>
+            <div class="card-body">
+                {% if tweets %}
+                    {% for tweet in tweets %}
+                        <div class="tweet mb-3 pb-3 border-bottom">
+                            <div class="d-flex">
+                                <div class="tweet-avatar me-3">
+                                    <i class="fas fa-user-circle fa-2x text-muted"></i>
+                                </div>
+                                <div class="tweet-content flex-grow-1">
+                                    <div class="tweet-header">
+                                        <strong>
+                                            <a href="{{ url_for('profile', username=tweet.author.username) }}" class="text-decoration-none">
+                                                @{{ tweet.author.username }}
+                                            </a>
+                                        </strong>
+                                        <small class="text-muted ms-2">
+                                            {{ tweet.timestamp.strftime('%B %d, %Y at %I:%M %p') }}
+                                        </small>
+                                    </div>
+                                    <div class="tweet-text mt-2">
+                                        {{ tweet.content }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-dove fa-3x mb-3"></i>
+                        <p>No tweets yet. Start following people or post your first tweet!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- User Info -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-user"></i> Profile</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+                    <h5>@{{ user.username }}</h5>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <p class="text-muted">
+                        <i class="fas fa-calendar-alt"></i> 
+                        Joined {{ user.joined_date.strftime('%B %Y') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-users"></i> Who to follow</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Find people to follow and see their tweets in your timeline.</p>
+                <a href="{{ url_for('profile', username=user.username) }}" class="btn btn-outline-primary btn-sm">
+                    Explore Users
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
